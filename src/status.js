@@ -170,38 +170,31 @@ var Status = (function () {
                 if (src.timer) {
                     clearInterval(src.timer);
                 }
+                src.timer = setTimeout(src.refresh, src.rate);
 
                 $.ajax({
                     url: src.url,
                     type: src.method,
                     dataType: src.dataType,
                     async: true,
-                    statusCode: {
-                        200: function (v) {
-                            console.log("Next refresh", src.name, "in", src.rate);
-                            src.timer = setTimeout(src.refresh, src.rate);
+                    success: function (v, t) {
+                        $.each(src.feeds, function (i, feed) {
+                            feed.type.refresh(src, feed, v);
+                        });
+                    },
+                    error: function (request, status, error) {
+                        if (src.timer) {
+                            clearInterval(src.timer);
+                        }
+                        console.error("Failed", src.name, status, error, "retry", src.retry);
+                        src.timer = setTimeout(src.refresh, src.retry);
 
-                            $.each(src.feeds, function (i, feed) {
-                                feed.type.refresh(src, feed, v);
-                            });
-                        },
-                        500: src.error
+                        $.each(src.feeds, function (i, feed) {
+                            if (feed.type.error)
+                                feed.type.error(src, feed, status);
+                        });
                     }
                 });
-            };
-
-            src.error = function () {
-                if (src.timer) {
-                    clearInterval(src.timer);
-                }
-
-                $.each(src.feeds, function (i, feed) {
-                    if (feed.type.error)
-                        feed.type.error(src, feed);
-                });
-
-                console.error("Failed", src.name, "retry", src.retry);
-                src.timer = setTimeout(src.refresh, src.retry);
             };
 
             src.refresh();
