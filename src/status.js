@@ -53,6 +53,8 @@ var Feed = (function () {
     Feed.header = function (feed, body, i, name) {
         return Feed.component(feed, body, i, name)
                 .removeClass("alarmlow")
+                .removeClass("stat")
+                .addClass("statheading")
                 .addClass("stathead");
     }
 
@@ -82,6 +84,43 @@ var Feed = (function () {
         return value;
     };
 
+    /**
+     * f will be called with c & d and if it returns true then the graph will be shown
+     * 
+     * @param {type} c Component
+     * @param {type} f handler
+     * @param {type} d user data
+     * @returns {undefined}
+     */
+    Feed.showGraph = function (c, f, d) {
+        c.hover(function (evt) {
+            if (f(c, d)) {
+                $("#graph").attr('visibility', 'visible')
+                        .css({
+                            top: evt.pageY + 15,
+                            left: evt.pageX
+                        });
+            }
+        });
+
+        c.mouseout(function ()
+        {
+            $("#graph").attr('visibility', 'hidden');
+        });
+        $(d.comp).click(function (e) {
+            showGraph(d, e);
+        }).removeAttr('title');
+    };
+
+    Feed.newSVG = function (n, a) {
+        var e = document.createElementNS('http://www.w3.org/2000/svg', n);
+        if (a) {
+            for (var k in a)
+                e.setAttribute(k, a[k]);
+        }
+        return $(e);
+    };
+    
     return Feed;
 })();
 
@@ -123,25 +162,33 @@ var Status = (function () {
                 "Application", "Status"
             ]
         });
-        Feed.value(Feed.header(sourcesPanel, sourcesPanel.body, 0, 'Application'))
-                .empty()
-                .append('Status')
-                .css('text-align', 'center');
+        var h = Feed.header(sourcesPanel, sourcesPanel.body, 0, 'Application');
+        Feed.value(h).empty().append('Status').css('text-align', 'center');
+        Feed.value(h).empty().append('Code').css('text-align', 'center');
         sourcesPanel.type = {
             comps: {},
             status: {},
+            response: {},
             refresh: function (src, feed, v) {
                 var s = feed.type.status[src.name];
                 if (s) {
                     s.empty().append("OK")
                             .removeClass("alarmlow").removeClass("alarmhigh").addClass("ok");
                 }
+                s = feed.type.response[src.name];
+                if (s) {
+                    s.empty().append("200");
+                }
             },
-            error: function (src, feed) {
+            error: function (src, feed, response) {
                 var s = feed.type.status[src.name];
                 if (s) {
                     s.empty().append("Offline")
                             .removeClass("alarmlow").addClass("alarmhigh").removeClass("ok");
+                }
+                s = feed.type.response[src.name];
+                if (s) {
+                    s.empty().append(response);
                 }
             }
         };
@@ -151,6 +198,7 @@ var Status = (function () {
             c.feeds = [sourcesPanel];
             var fc = sourcesPanel.type.comps[c.name] = Feed.component(sourcesPanel, sourcesPanel.body, i + 1, c.label ? c.label : c.name, c.desc ? c.desc : c.name);
             sourcesPanel.type.status[c.name] = Feed.value(fc).css('text-align', 'center');
+            sourcesPanel.type.response[c.name] = Feed.value(fc).css('text-align', 'center');
             Status.sources[c.name] = c;
         });
 

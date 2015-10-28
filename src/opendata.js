@@ -29,11 +29,12 @@ Feed.types.opendata = (function () {
                 conf: s
             };
             $.each(s.stats, function (si, se) {
-                tmp[s.name][se.name] = {
+                var d = tmp[s.name][se.name] = {
                     comp: Feed.value(c, se.title + "," + se.desc),
                     conf: se
                 };
-                tmplast.push(tmp[s.name][se.name]);
+                tmplast.push(d);
+                Feed.showGraph(d.comp, showGraph, d);
             });
         });
 
@@ -60,12 +61,41 @@ Feed.types.opendata = (function () {
         };
     }
 
+    var showGraph = function (c, d) {
+        var fx = 0;
+        $.each(d.v.values, function (i, e) {
+            fx = e > fx ? e : fx;
+        });
+        if (fx < 1)
+            return false;
+
+        fx = 100 / fx;
+        var p = '', fy = d.v.values.length < 200 ? 1 : 200 / d.v.values.length;
+        $.each(d.v.values, function (i, e) {
+            if (i === 0) {
+                p = 'M0,';
+            } else {
+                p = p + 'L' + (i * fy) + ',';
+            }
+            p = p + (100 - (e * fx));
+        })
+        $('#graph').empty()
+                .append(Feed.newSVG('path', {'d': 'M0,100L200,100'}))
+                .append(Feed.newSVG('path', {'d': p}));
+        if (d.conf.title && d.conf.desc)
+            $('#graph').append(Feed.newSVG('text', {x: 2, y: 115})
+                    .append(d.conf.desc ? d.conf.title + ' ' + d.conf.desc : d.conf.title)
+                    );
+        return true;
+    };
+
     var setValue = function (se, v) {
+        se.v = v;
         if (v.current) {
             se.comp.empty().append(v.current);
             setAlarm(se, v);
         } else {
-            se.last=null;
+            se.last = null;
         }
     };
 
