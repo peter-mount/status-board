@@ -1,0 +1,107 @@
+{
+    "sources": [
+        {
+            "name": "feeds",
+            "url": "//area51.onl/feeds/admin/api/rate",
+            "rate": 60000
+        }
+    ],
+    "panels": [
+        {
+            "id": "feeds",
+            "title": "Data Feeds",
+            "desc": "Current status of the OpenData feeds",
+            "type": "opendata",
+            "source": "feeds",
+            "css": {
+            },
+            "class": "",
+            "status": [
+                {
+                    "name": "nr.trust",
+                    "desc": "Network Rail Trust Feed",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's stats",
+                            "desc": "1 sample every minute",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "period": 60
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 1,
+                                "high": 30
+                            }
+                        },
+                        {
+                            "name": "day",
+                            "title": "Last days's stats",
+                            "desc": "1 sample every 15 minutes",
+                            "axis": {
+                                "x": {
+                                    "label": "15 Minutes",
+                                    "period": 900
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 15,
+                                "high": 500
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "nr.rtppm",
+                    "desc": "Network Rail RTPPM Feed",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's stats",
+                            "desc": "1 sample every minute",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "period": 60
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 0,
+                                "high": 2
+                            }
+                        },
+                        {
+                            "name": "day",
+                            "title": "Last days's stats",
+                            "desc": "1 sample every 15 minutes",
+                            "axis": {
+                                "x": {
+                                    "label": "15 Minutes",
+                                    "period": 900
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 15,
+                                "high": 16
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
