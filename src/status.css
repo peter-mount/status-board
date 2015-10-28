@@ -20,6 +20,25 @@ body, html {
     overflow: auto;
 }
 
+#legend {
+    position: absolute;
+    right: 0;
+    bottom: 1em;
+    width: 10em;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    font-size: 0.7em;
+    padding: 0.1em;
+    text-align: center;
+}
+#legend h1 {
+    background: darkturquoise;
+    margin:0;
+    padding:1px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
 #footer {
     position: absolute;
     left: 0;
@@ -92,17 +111,29 @@ body, html {
     text-align: right;
 }
 
+/* Normal Value */
 .alarmnorm {
 }
 
+/* Value is below alarm.low threshold */
 .alarmlow {
     background: red;
     color: yellow;
 }
+
+/* Value is above alarm.high threshold */
 .alarmhigh {
     background: yellow;
     color: red;
 }
+
+/* Value is missing - colour is a Dr Who reference */
+.alarmfail {
+    background: magenta;
+    color: yellow;
+}
+
+/* Application status ok */
 .ok {
     background: green;
     color: yellow;
