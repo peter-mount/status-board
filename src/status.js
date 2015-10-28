@@ -12,8 +12,9 @@ var Feed = (function () {
         this.comp = $('<div></div>')
                 .appendTo(container)
                 .attr('id', v.id)
-                .attr('class', "feed " + v.class)
-                .css(v.css);
+                .attr('class', v.class ? "feed " + v.class : "feed")
+        if (v.css)
+            this.comp.css(v.css);
 
         var x = $("<div></div>")
                 .appendTo(this.comp)
@@ -27,22 +28,24 @@ var Feed = (function () {
                 .addClass('feedbody');
 
         // Lookup the source & type of feed
-        this.source = Status.sources[v.source];
-        if (typeof this.source === 'undefined') {
-            $("<div></div>")
-                    .attr('class', 'failure')
-                    .append("Undefined source " + v.source)
-                    .appendTo(this.comp);
-        } else {
-            var type = Feed.types[this.source.type];
-            if (typeof type === 'undefined') {
+        if (v.source) {
+            this.source = Status.sources[v.source];
+            if (typeof this.source === 'undefined') {
                 $("<div></div>")
                         .attr('class', 'failure')
-                        .append("Unsupported type " + v.type)
+                        .append("Undefined source " + v.source)
                         .appendTo(this.comp);
             } else {
-                this.type = new type(this, body, v);
-                this.source.feeds.push(this);
+                var type = Feed.types[this.source.type];
+                if (typeof type === 'undefined') {
+                    $("<div></div>")
+                            .attr('class', 'failure')
+                            .append("Unsupported type " + v.type)
+                            .appendTo(this.comp);
+                } else {
+                    this.type = new type(this, body, v);
+                    this.source.feeds.push(this);
+                }
             }
         }
     }
@@ -57,7 +60,6 @@ var Feed = (function () {
         feed.comp.css('height', ((i * 1.25) + 3.5) + 'em');
         var comp = $('<div></div>')
                 .addClass('stat')
-                .addClass("alarmlow")
                 .appendTo(body);
         var n = $('<span></span>')
                 .addClass("statname")
@@ -109,19 +111,53 @@ var Status = (function () {
     };
 
     Status.init = function (v) {
-        var body = $('#status').empty()
+        var body = $('#status').empty(), tmp = {};
         this.body = body;
+
+        // The "sources" panel
+        var sourcesPanel = new Feed(body, {
+            name: "",
+            title: "Applications",
+            desc: "The monitored applications",
+            heading: [
+                "Application", "Status"
+            ]
+        });
+        Feed.value(Feed.header(sourcesPanel, sourcesPanel.body, 0, 'Application'))
+                .empty()
+                .append('Status')
+                .css('text-align', 'center');
+        sourcesPanel.type = {
+            comps: {},
+            status: {},
+            refresh: function (src, feed, v) {
+                var s = feed.type.status[src.name];
+                if (s) {
+                    s.empty().append("OK")
+                            .removeClass("alarmlow").removeClass("alarmhigh").addClass("ok");
+                }
+            },
+            error: function (src, feed) {
+                var s = feed.type.status[src.name];
+                if (s) {
+                    s.empty().append("Offline")
+                            .removeClass("alarmlow").addClass("alarmhigh").removeClass("ok");
+                }
+            }
+        };
 
         // Create sources map
         $.each(v.sources, function (i, c) {
-            c.feeds = [];
+            c.feeds = [sourcesPanel];
+            var fc = sourcesPanel.type.comps[c.name] = Feed.component(sourcesPanel, sourcesPanel.body, i + 1, c.label ? c.label : c.name, c.desc ? c.desc : c.name);
+            sourcesPanel.type.status[c.name] = Feed.value(fc).css('text-align', 'center');
             Status.sources[c.name] = c;
         });
 
-        // Now the panels
-        var tmp = {};
+        // The configured panels
         $.each(v.panels, function (i, c) {
             var feed = new Feed(body, c);
+            feed.id = c.id;
             tmp[c.id] = feed;
             body.append(c.comp);
         });
@@ -158,7 +194,12 @@ var Status = (function () {
                 if (src.timer) {
                     clearInterval(src.timer);
                 }
-                // Show error?
+
+                $.each(src.feeds, function (i, feed) {
+                    if (feed.type.error)
+                        feed.type.error(src, feed);
+                });
+
                 console.error("Failed", src.name, "retry", src.retry);
                 src.timer = setTimeout(src.refresh, src.retry);
             };

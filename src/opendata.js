@@ -43,42 +43,43 @@ Feed.types.opendata = (function () {
                 var c = feed.type.stats[s.name];
                 if (c) {
                     $.each(c.conf.stats, function (si, se) {
-                        setValue(c, c[se.name], s[se.name]);
+                        setValue(c[se.name], s[se.name]);
                     });
                 }
             });
         };
     }
 
-    var setValue = function (c, se, v) {
+    var setValue = function (se, v) {
         if (v.current) {
             se.comp.empty().append(v.current);
-            setAlarm(c, se, v.current);
+            setAlarm(se, v.current);
         } else {
-            se.comp.empty().append("N/A");
-            c.comp.addClass("alarmlow");
+            se.comp.empty()
+                    .append("N/A")
+                    .addClass("alarmlow");
         }
     };
 
-    var setAlarm = function (c, se, v) {
+    var setAlarm = function (se, v) {
         var a = se.conf.alarm;
         if (a) {
             if (a.low && v < a.low) {
-                c.comp.addClass("alarmlow")
+                se.comp.addClass("alarmlow")
                         .removeClass("alarmhigh")
                         .removeClass("alarmnorm");
             } else if (a.high && v > a.high) {
-                c.comp.removeClass("alarmlow")
+                se.comp.removeClass("alarmlow")
                         .addClass("alarmhigh")
                         .removeClass("alarmnorm");
             } else {
-                c.comp.removeClass("alarmlow")
+                se.comp.removeClass("alarmlow")
                         .removeClass("alarmhigh")
                         .addClass("alarmnorm");
             }
         }
         else {
-            c.comp.addClass("alarmnorm");
+            se.comp.addClass("alarmnorm");
         }
     };
 

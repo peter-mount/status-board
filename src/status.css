@@ -35,6 +35,8 @@ body, html {
 .feed {
     border: 1px solid black;
     padding:0;
+    margin: 2px;
+    float:left;
     width: 19.5em;
     overflow: hidden;
     font-size: 0.8em;
@@ -100,4 +102,8 @@ body, html {
 .alarmhigh {
     background: yellow;
     color: red;
+}
+.ok {
+    background: green;
+    color: yellow;
 }

@@ -3,6 +3,8 @@
         {
             "name": "feeds",
             "type": "opendata",
+            "label": "opendata feeds",
+            "desc": "The inbound opendata feeds",
             "url": "//area51.onl/feeds/admin/api/rate",
             "method": "GET",
             "dataType": "json",
@@ -148,6 +150,106 @@
                             "alarm": {
                                 "low": 1000,
                                 "high": 30000
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "database",
+            "title": "Database Performance",
+            "desc": "Database Performance loading date from the OpenData feeds",
+            "source": "feeds",
+            "css": {
+            },
+            "class": "",
+            "heading": [
+                "Schema", "1m", "15m"
+            ],
+            "status": [
+                {
+                    "name": "darwin.db",
+                    "label": "Darwin import",
+                    "desc": "Loading forecasts into the database",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's stats",
+                            "desc": "1 sample every minute",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "period": 60
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 700,
+                                "high": 2000
+                            }
+                        },
+                        {
+                            "name": "day",
+                            "title": "Last days's stats",
+                            "desc": "1 sample every 15 minutes",
+                            "axis": {
+                                "x": {
+                                    "label": "15 Minutes",
+                                    "period": 900
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 500,
+                                "high": 28000
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "rtppm",
+                    "label": "RTPPM import",
+                    "desc": "Loading rtppm into the database",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's stats",
+                            "desc": "1 sample every minute",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "period": 60
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 140,
+                                "high": 162
+                            }
+                        },
+                        {
+                            "name": "day",
+                            "title": "Last days's stats",
+                            "desc": "1 sample every 15 minutes",
+                            "axis": {
+                                "x": {
+                                    "label": "15 Minutes",
+                                    "period": 900
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 2190,
+                                "high": 2300
                             }
                         }
                     ]
