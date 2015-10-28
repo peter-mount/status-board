@@ -120,7 +120,7 @@ var Feed = (function () {
         }
         return $(e);
     };
-    
+
     return Feed;
 })();
 
@@ -169,6 +169,12 @@ var Status = (function () {
             comps: {},
             status: {},
             response: {},
+            prerefresh: function (src, feed) {
+                var s = feed.type.response[src.name];
+                if (s) {
+                    s.empty().append("Run");
+                }
+            },
             refresh: function (src, feed, v) {
                 var s = feed.type.status[src.name];
                 if (s) {
@@ -197,8 +203,8 @@ var Status = (function () {
         $.each(v.sources, function (i, c) {
             c.feeds = [sourcesPanel];
             var fc = sourcesPanel.type.comps[c.name] = Feed.component(sourcesPanel, sourcesPanel.body, i + 1, c.label ? c.label : c.name, c.desc ? c.desc : c.name);
-            sourcesPanel.type.status[c.name] = Feed.value(fc).css('text-align', 'center');
-            sourcesPanel.type.response[c.name] = Feed.value(fc).css('text-align', 'center');
+            sourcesPanel.type.status[c.name] = Feed.value(fc).css('text-align', 'center').addClass("alarmhigh").empty().append("Pending");
+            sourcesPanel.type.response[c.name] = Feed.value(fc).css('text-align', 'center').empty().append("");
             Status.sources[c.name] = c;
         });
 
@@ -220,6 +226,11 @@ var Status = (function () {
                 }
                 src.timer = setTimeout(src.refresh, src.rate);
 
+                $.each(src.feeds, function (i, feed) {
+                    if (feed.type.prerefresh)
+                        feed.type.prerefresh(src, feed);
+                });
+
                 $.ajax({
                     url: src.url,
                     type: src.method,
@@ -227,7 +238,8 @@ var Status = (function () {
                     async: true,
                     success: function (v, t) {
                         $.each(src.feeds, function (i, feed) {
-                            feed.type.refresh(src, feed, v);
+                            if (feed.type.refresh)
+                                feed.type.refresh(src, feed, v);
                         });
                     },
                     error: function (request, status, error) {
@@ -255,3 +267,13 @@ var Status = (function () {
 $(document).ready(function () {
     Status.start();
 });
+
+// Ping feed type - just retrieves a file
+Feed.types.ping = (function () {
+    function Ping(feed, body, v) {
+        this.feed = feed;
+        this.config = v;
+    }
+
+    return Ping;
+})();

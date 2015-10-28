@@ -3,11 +3,141 @@
         {
             "name": "feeds",
             "type": "opendata",
-            "label": "opendata feeds",
+            "label": "Open Data Feeds",
             "desc": "The inbound opendata feeds",
             "url": "//area51.onl/feeds/admin/api/rate",
             "method": "GET",
             "dataType": "json",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "jenkins",
+            "type": "ping",
+            "label": "Jenkins",
+            "url": "//area51.onl/status/jenkins",
+            "method": "GET",
+            "dataType": "json",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "bestia",
+            "type": "ping",
+            "label": "Jenkins Slave PI 2B",
+            "url": "//area51.onl/status/callisto/",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "fenrir",
+            "type": "ping",
+            "label": "Jenkins Slave PI B",
+            "url": "//area51.onl/status/fenrir/",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "nexus",
+            "type": "ping",
+            "label": "Nexus",
+            "url": "//area51.onl/status/nexus/header_branding.png",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "errapus",
+            "type": "ping",
+            "label": "PostgreSQL",
+            "url": "//area51.onl/status/errapus/",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "europa",
+            "type": "ping",
+            "label": "UAT",
+            "url": "//area51.onl/status/europa/",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "ganymede",
+            "type": "ping",
+            "label": "Map Server",
+            "url": "//area51.onl/status/ganymede/",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "janus",
+            "type": "ping",
+            "label": "Tomcat",
+            "url": "//area51.onl/status/janus/",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "iapetus",
+            "type": "ping",
+            "label": "Apache",
+            "url": "//area51.onl/status/iapetus/",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "prometheus",
+            "type": "ping",
+            "label": "Apache UAT IPv4",
+            "url": "//area51.onl/status/prometheus/webcam1.jpg",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "callisto",
+            "type": "ping",
+            "label": "Apache UAT IPv6",
+            "url": "//area51.onl/status/callisto/",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "helene",
+            "type": "ping",
+            "label": "Cloud Cover",
+            "url": "//area51.onl/status/helene/",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "kari",
+            "type": "ping",
+            "label": "A229 Camera",
+            "url": "//area51.onl/status/kari/",
+            "method": "GET",
+            "dataType": "text",
             "rate": 60000,
             "retry": 15000
         }
