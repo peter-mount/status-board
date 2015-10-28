@@ -19,9 +19,13 @@
             "css": {
             },
             "class": "",
+            "heading": [
+                "Feed", "1m", "15m"
+            ],
             "status": [
                 {
                     "name": "nr.trust",
+                    "label": "TRUST",
                     "desc": "Network Rail Trust Feed",
                     "stats": [
                         {
@@ -64,6 +68,7 @@
                 },
                 {
                     "name": "nr.rtppm",
+                    "label": "RTPPM",
                     "desc": "Network Rail RTPPM Feed",
                     "stats": [
                         {
@@ -106,6 +111,7 @@
                 },
                 {
                     "name": "nre.push",
+                    "label": "Darwin Push Port",
                     "desc": "Darwin PushPort Feed",
                     "stats": [
                         {

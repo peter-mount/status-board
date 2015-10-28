@@ -18,9 +18,9 @@ var Feed = (function () {
         var x = $("<div></div>")
                 .appendTo(this.comp)
                 .append(v.title)
-                .attr("title", v.desc)
-                .attr("alt", v.desc)
                 .addClass('feedtitle');
+        if (v.desc)
+            x.attr("title", v.desc);
 
         var body = this.body = $('<div></div>')
                 .appendTo(this.comp)
@@ -47,18 +47,24 @@ var Feed = (function () {
         }
     }
 
+    Feed.header = function (feed, body, i, name) {
+        return Feed.component(feed, body, i, name)
+                .removeClass("alarmlow")
+                .addClass("stathead");
+    }
+
     Feed.component = function (feed, body, i, name, desc) {
         feed.comp.css('height', ((i * 1.25) + 3.5) + 'em');
         var comp = $('<div></div>')
                 .addClass('stat')
                 .addClass("alarmlow")
-                .append($('<span></span>')
-                        .addClass("statname")
-                        .attr("title", desc)
-                        .append(name)
-                        )
                 .appendTo(body);
-        comp.stats = {};
+        var n = $('<span></span>')
+                .addClass("statname")
+                .append(name)
+                .appendTo(comp);
+        if (desc)
+            n.attr("title", desc);
         return comp;
     };
 

@@ -5,8 +5,24 @@ Feed.types.opendata = (function () {
         this.config = v;
 
         var tmp = this.stats = {};
+
+        var offset = 0;
+
+        if (v.heading) {
+            var h;
+            $.each(v.heading, function (si, se) {
+                if (h)
+                    Feed.value(h).empty().append(se);
+                else
+                    h = Feed.header(feed, body, offset, se);
+            });
+            offset++;
+        }
+
         $.each(v.status, function (i, s) {
-            var c = Feed.component(feed, body, i, s.name, s.desc);
+            var name = s.label ? s.label : s.name;
+            var desc = s.desc ? s.name + " " + s.desc : s.name;
+            var c = Feed.component(feed, body, i + offset, name, desc);
             tmp[s.name] = {
                 comp: c,
                 conf: s

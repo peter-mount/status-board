@@ -62,32 +62,37 @@ body, html {
     overflow-y: auto;
 }
 
-.feedbody .stat {
+.stat {
     overflow: hidden;
     font-size: 1em;
     height: 1.25em;
     padding: 0;
     margin:0;
 }
-.feedbody .stat:hover {
+.stat:hover {
     background: lightblue;
     color: black;
 }
 
-.feedbody .stat .statname {
+.stathead {
+    border-bottom: 1px solid black;
+    font-weight: bold;
+}
+
+.statname {
     display: inline-block;
     width: 9.5em;
 }
 
-.feedbody .stat .statval {
+.statval {
     display: inline-block;
     width: 5em;
     text-align: right;
 }
 
 .alarmnorm {
-
 }
+
 .alarmlow {
     background: red;
     color: yellow;
