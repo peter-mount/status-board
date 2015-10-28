@@ -2,8 +2,12 @@
     "sources": [
         {
             "name": "feeds",
+            "type": "opendata",
             "url": "//area51.onl/feeds/admin/api/rate",
-            "rate": 60000
+            "method": "GET",
+            "dataType": "json",
+            "rate": 60000,
+            "retry": 15000
         }
     ],
     "panels": [
@@ -11,7 +15,6 @@
             "id": "feeds",
             "title": "Data Feeds",
             "desc": "Current status of the OpenData feeds",
-            "type": "opendata",
             "source": "feeds",
             "css": {
             },
@@ -97,6 +100,48 @@
                             "alarm": {
                                 "low": 15,
                                 "high": 16
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "nre.push",
+                    "desc": "Darwin PushPort Feed",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's stats",
+                            "desc": "1 sample every minute",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "period": 60
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 1000,
+                                "high": 1800
+                            }
+                        },
+                        {
+                            "name": "day",
+                            "title": "Last days's stats",
+                            "desc": "1 sample every 15 minutes",
+                            "axis": {
+                                "x": {
+                                    "label": "15 Minutes",
+                                    "period": 900
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 1000,
+                                "high": 30000
                             }
                         }
                     ]

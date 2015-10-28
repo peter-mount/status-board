@@ -4,11 +4,13 @@
 
 var Feed = (function () {
 
-    function Feed(body, v) {
+    Feed.types = {};
+
+    function Feed(container, v) {
         this.config = v;
 
         this.comp = $('<div></div>')
-                .appendTo(body)
+                .appendTo(container)
                 .attr('id', v.id)
                 .attr('class', "feed " + v.class)
                 .css(v.css);
@@ -20,70 +22,68 @@ var Feed = (function () {
                 .attr("alt", v.desc)
                 .addClass('feedtitle');
 
-        this.body = $('<div></div>')
+        var body = this.body = $('<div></div>')
                 .appendTo(this.comp)
                 .addClass('feedbody');
 
-        switch (v.type) {
-            case "opendata":
-                initOpenData(this, v);
-                break;
-
-            default:
+        // Lookup the source & type of feed
+        this.source = Status.sources[v.source];
+        if (typeof this.source === 'undefined') {
+            $("<div></div>")
+                    .attr('class', 'failure')
+                    .append("Undefined source " + v.source)
+                    .appendTo(this.comp);
+        } else {
+            var type = Feed.types[this.source.type];
+            if (typeof type === 'undefined') {
                 $("<div></div>")
                         .attr('class', 'failure')
                         .append("Unsupported type " + v.type)
                         .appendTo(this.comp);
+            } else {
+                this.type = new type(this, body, v);
+                this.source.feeds.push(this);
+            }
         }
     }
 
-    var component = function (body, n, d) {
-        var div = $('<div></div>')
+    Feed.component = function (feed, body, i, name, desc) {
+        feed.comp.css('height', ((i * 1.25) + 3.5) + 'em');
+        var comp = $('<div></div>')
                 .addClass('stat')
-                .appendTo(body)
+                .addClass("alarmlow")
                 .append($('<span></span>')
                         .addClass("statname")
-                        .attr("title", d)
-                        .append(n)
+                        .attr("title", desc)
+                        .append(name)
                         )
-                .append($('<span></span>')
-                        .addClass("statval")
-                        .attr("title", "Current value")
-                        .append('N/A')
-                        )
-                .append($('<span></span>')
-                        .addClass("statalarm")
-                        .attr("title", "Alarm Status")
-                        .append('')
-                        );
-
-        return div;
+                .appendTo(body);
+        comp.stats = {};
+        return comp;
     };
 
-    /**
-     * Initialise the open data type of feed
-     * @param {type} v
-     * @returns {undefined}
-     */
-    var initOpenData = function (feed, v)
-    {
-        var stats = this.stats = {};
-        $.each(v.status, function (i, c) {
-            c.comp = component(feed.body, c.name, c.desc);
-            stats[c.name] = c;
-            feed.comp.css('height', (i+3.5)+'em');
-        });
-
-        console.log(this.stats);
-    }
+    Feed.value = function (c, t) {
+        var value = $('<span></span>')
+                .addClass("statval")
+                .append('0')
+                .appendTo(c);
+        if (t)
+        {
+            value.attr("title", t);
+        }
+        return value;
+    };
 
     return Feed;
 })();
 
 var Status = (function () {
+
     function Status() {
 
     }
+
+    Status.sources = {};
 
     Status.start = function () {
         var fail = function () {
@@ -105,24 +105,60 @@ var Status = (function () {
     Status.init = function (v) {
         var body = $('#status').empty()
         this.body = body;
-        
+
         // Create sources map
-        var tmp = {};
-        $.each(v.sources,function(i,c){
-            tmp[c.name]=c;
+        $.each(v.sources, function (i, c) {
+            c.feeds = [];
+            Status.sources[c.name] = c;
         });
-        console.log(tmp);
-        this.sources=tmp;
-        
+
         // Now the panels
-        tmp={};
+        var tmp = {};
         $.each(v.panels, function (i, c) {
             var feed = new Feed(body, c);
             tmp[c.id] = feed;
+            body.append(c.comp);
         });
         console.log(tmp);
         this.feeds = tmp;
-        
+
+        // Now start the feeds
+        $.each(Status.sources, function (i, src) {
+            src.refresh = function () {
+                if (src.timer) {
+                    clearInterval(src.timer);
+                }
+
+                $.ajax({
+                    url: src.url,
+                    type: src.method,
+                    dataType: src.dataType,
+                    async: true,
+                    statusCode: {
+                        200: function (v) {
+                            console.log("Next refresh", src.name, "in", src.rate);
+                            src.timer = setTimeout(src.refresh, src.rate);
+
+                            $.each(src.feeds, function (i, feed) {
+                                feed.type.refresh(src, feed, v);
+                            });
+                        },
+                        500: src.error
+                    }
+                });
+            };
+
+            src.error = function () {
+                if (src.timer) {
+                    clearInterval(src.timer);
+                }
+                // Show error?
+                console.error("Failed", src.name, "retry", src.retry);
+                src.timer = setTimeout(src.refresh, src.retry);
+            };
+
+            src.refresh();
+        });
     };
 
     return Status;
