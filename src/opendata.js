@@ -76,11 +76,11 @@ Feed.types.opendata = (function () {
                 if (k.startsWith(prefix)) {
                     var c = feed.type.stats[k];
                     if (c) {
-                        console.log(k, ' = ', c.conf.name);
                         c.comp.addClass("alarmfail");
                         $.each(c.conf.stats, function (si, se) {
                             if (se.comp)
-                                se.comp.removeClass("alarmlow")
+                                se.comp.empty()
+                                        .removeClass("alarmlow")
                                         .removeClass("alarmhigh")
                                         .removeClass("alarmnorm")
                                         .addClass("alarmfail");
@@ -158,7 +158,12 @@ Feed.types.opendata = (function () {
     var setValue = function (se, v) {
         se.v = v;
         if (v.current) {
-            se.comp.empty().append(v.current);
+            var yaxis = se.conf.axis && se.conf.axis.y;
+            var d = yaxis && yaxis.divisor && yaxis.divisor > 0 ? yaxis.divisor : null;
+            d = d ? Math.floor(v.current / d) : v.current;
+            if (yaxis.unit)
+                d = d + ' ' + yaxis.unit;
+            se.comp.empty().append(d);
             setAlarm(se, v);
         } else {
             se.last = null;

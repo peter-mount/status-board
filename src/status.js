@@ -82,14 +82,9 @@ var Feed = (function () {
     };
 
     Feed.value = function (c, t) {
-        var value = $('<span></span>')
-                .addClass("statval")
-                .append('0')
-                .appendTo(c);
+        var value = $('<span></span>').addClass("statval").appendTo(c);
         if (t)
-        {
             value.attr("title", t);
-        }
         return value;
     };
 
@@ -161,6 +156,7 @@ var Status = (function () {
         // The "sources" panel
         var sourcesPanel = new Feed(body, {
             name: "",
+            class: "feed1col",
             title: "Applications",
             desc: "The monitored applications",
             heading: [
@@ -169,15 +165,13 @@ var Status = (function () {
         });
         var h = Feed.header(sourcesPanel, sourcesPanel.body, 0, 'Application');
         Feed.value(h).empty().append('Status').css('text-align', 'center');
-        Feed.value(h).empty().append('Code').css('text-align', 'center');
         sourcesPanel.type = {
             comps: {},
             status: {},
-            response: {},
             prerefresh: function (src, feed) {
-                var s = feed.type.response[src.name];
+                var s = feed.type.status[src.name];
                 if (s) {
-                    s.empty().append("Run");
+                    s.empty().append("Checking");
                 }
             },
             refresh: function (src, feed, v) {
@@ -186,20 +180,12 @@ var Status = (function () {
                     s.empty().append("OK")
                             .removeClass("alarmlow").removeClass("alarmhigh").addClass("ok");
                 }
-                s = feed.type.response[src.name];
-                if (s) {
-                    s.empty().append("200");
-                }
             },
             error: function (src, feed, response) {
                 var s = feed.type.status[src.name];
                 if (s) {
                     s.empty().append("Offline")
-                            .removeClass("alarmlow").addClass("alarmhigh").removeClass("ok");
-                }
-                s = feed.type.response[src.name];
-                if (s) {
-                    s.empty().append(response);
+                            .removeClass("alarmlow").removeClass("alarmhigh").removeClass("ok").addClass("alarmfail");
                 }
             }
         };
@@ -209,7 +195,6 @@ var Status = (function () {
             c.feeds = [sourcesPanel];
             var fc = sourcesPanel.type.comps[c.name] = Feed.component(sourcesPanel, sourcesPanel.body, i + 1, c.label ? c.label : c.name, c.desc ? c.desc : c.name);
             sourcesPanel.type.status[c.name] = Feed.value(fc).css('text-align', 'center').addClass("alarmhigh").empty().append("Pending");
-            sourcesPanel.type.response[c.name] = Feed.value(fc).css('text-align', 'center').empty().append("");
             Status.sources[c.name] = c;
         });
 
@@ -220,7 +205,6 @@ var Status = (function () {
             tmp[c.id] = feed;
             body.append(c.comp);
         });
-        console.log(tmp);
         this.feeds = tmp;
 
         // Now start the feeds
@@ -251,7 +235,6 @@ var Status = (function () {
                         if (src.timer) {
                             clearInterval(src.timer);
                         }
-                        console.error("Failed", src.name, status, request, "retry", src.retry);
                         src.timer = setTimeout(src.refresh, src.retry);
 
                         $.each(src.feeds, function (i, feed) {
