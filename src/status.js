@@ -50,13 +50,22 @@ var Feed = (function () {
         }
     }
 
+    Feed.prototype.getSource = function (v)
+    {
+        var srcName = v.source;
+        if (!srcName)
+            srcName = this.source;
+
+        return srcName ? Status.sources[srcName] : null;
+    };
+
     Feed.header = function (feed, body, i, name) {
         return Feed.component(feed, body, i, name)
                 .removeClass("alarmlow")
                 .removeClass("stat")
                 .addClass("statheading")
                 .addClass("stathead");
-    }
+    };
 
     Feed.component = function (feed, body, i, name, desc) {
         feed.comp.css('height', ((i * 1.25) + 3.5) + 'em');
@@ -242,12 +251,12 @@ var Status = (function () {
                         if (src.timer) {
                             clearInterval(src.timer);
                         }
-                        console.error("Failed", src.name, status, error, "retry", src.retry);
+                        console.error("Failed", src.name, status, request, "retry", src.retry);
                         src.timer = setTimeout(src.refresh, src.retry);
 
                         $.each(src.feeds, function (i, feed) {
                             if (feed.type.error)
-                                feed.type.error(src, feed, status);
+                                feed.type.error(src, feed);
                         });
                     }
                 });

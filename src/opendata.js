@@ -21,15 +21,21 @@ Feed.types.opendata = (function () {
         }
 
         $.each(v.status, function (i, s) {
+            var source = s.source ? s.source : feed.source;
+            var compName = source.name + ":" + s.name;
+
             var name = s.label ? s.label : s.name;
             var desc = s.desc ? s.name + " " + s.desc : s.name;
             var c = Feed.component(feed, body, i + offset, name, desc);
-            tmp[s.name] = {
+
+            tmp[compName] = {
                 comp: c,
-                conf: s
+                conf: s,
+                source: source
             };
+
             $.each(s.stats, function (si, se) {
-                var d = tmp[s.name][se.name] = {
+                var d = tmp[compName][se.name] = {
                     comp: Feed.value(c, se.title + "," + se.desc),
                     conf: se
                 };
@@ -40,8 +46,12 @@ Feed.types.opendata = (function () {
 
         this.refresh = function (src, feed, v) {
             $.each(v.stats, function (i, s) {
-                var c = feed.type.stats[s.name];
+                var source = s.source ? s.source : feed.source;
+                var compName = source.name + ":" + s.name;
+
+                var c = feed.type.stats[compName];
                 if (c) {
+                    c.comp.removeClass("alarmfail");
                     $.each(c.conf.stats, function (si, se) {
                         setValue(c[se.name], s[se.name]);
                     });
@@ -58,6 +68,26 @@ Feed.types.opendata = (function () {
                             .addClass("alarmfail");
                 }
             });
+        };
+
+        this.error = function (src, feed) {
+            var prefix = src.name + ":";
+            for (var k in feed.type.stats) {
+                if (k.startsWith(prefix)) {
+                    var c = feed.type.stats[k];
+                    if (c) {
+                        console.log(k, ' = ', c.conf.name);
+                        c.comp.addClass("alarmfail");
+                        $.each(c.conf.stats, function (si, se) {
+                            if (se.comp)
+                                se.comp.removeClass("alarmlow")
+                                        .removeClass("alarmhigh")
+                                        .removeClass("alarmnorm")
+                                        .addClass("alarmfail");
+                        });
+                    }
+                }
+            }
         };
     }
 
