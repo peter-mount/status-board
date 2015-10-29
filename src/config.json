@@ -62,32 +62,32 @@
             "retry": 15000
         },
         {
-            "name": "europa",
+            "name": "geoserver",
             "type": "ping",
-            "label": "UAT",
-            "url": "//area51.onl/status/europa/",
+            "label": "GeoServer",
+            "url": "//area51.onl/status/geoserver/logo.png",
             "method": "GET",
             "dataType": "text",
             "rate": 60000,
             "retry": 15000
         },
         {
-            "name": "ganymede",
-            "type": "ping",
-            "label": "Map Server",
-            "url": "//area51.onl/status/ganymede/",
+            "name": "tomcat1",
+            "type": "opendata",
+            "label": "Tomcat Prod 1",
+            "url": "//area51.onl/status/tomcat1",
             "method": "GET",
-            "dataType": "text",
+            "dataType": "json",
             "rate": 60000,
             "retry": 15000
         },
         {
-            "name": "janus",
-            "type": "ping",
-            "label": "Tomcat",
-            "url": "//area51.onl/status/janus/",
+            "name": "tomcat2",
+            "type": "opendata",
+            "label": "Tomcat Prod 2",
+            "url": "//area51.onl/status/tomcat2",
             "method": "GET",
-            "dataType": "text",
+            "dataType": "json",
             "rate": 60000,
             "retry": 15000
         },
@@ -96,26 +96,6 @@
             "type": "ping",
             "label": "Apache",
             "url": "//area51.onl/status/iapetus/",
-            "method": "GET",
-            "dataType": "text",
-            "rate": 60000,
-            "retry": 15000
-        },
-        {
-            "name": "prometheus",
-            "type": "ping",
-            "label": "Apache UAT IPv4",
-            "url": "//area51.onl/status/prometheus/webcam1.jpg",
-            "method": "GET",
-            "dataType": "text",
-            "rate": 60000,
-            "retry": 15000
-        },
-        {
-            "name": "callisto",
-            "type": "ping",
-            "label": "Apache UAT IPv6",
-            "url": "//area51.onl/status/callisto/",
             "method": "GET",
             "dataType": "text",
             "rate": 60000,
@@ -140,9 +120,366 @@
             "dataType": "text",
             "rate": 60000,
             "retry": 15000
+        },
+        {
+            "name": "prometheus",
+            "type": "ping",
+            "label": "UAT Apache IPv4",
+            "url": "//area51.onl/status/prometheus/webcam1.jpg",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "callisto",
+            "type": "ping",
+            "label": "UAT Apache IPv6",
+            "url": "//area51.onl/status/callisto/",
+            "method": "GET",
+            "dataType": "text",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "uat-tomcat",
+            "type": "opendata",
+            "label": "UAT Tomcat",
+            "desc": "UAT Tomcat instance",
+            "url": "//area51.onl/status/uattomcat/admin/api/rate",
+            "method": "GET",
+            "dataType": "json",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "uat-uktrain",
+            "type": "opendata",
+            "label": "UAT uktra.in",
+            "desc": "UAT version of uktra.in",
+            "url": "//uat.uktra.in/admin/api/rate",
+            "method": "GET",
+            "dataType": "json",
+            "rate": 60000,
+            "retry": 15000
+        },
+        {
+            "name": "uat-departureboards",
+            "type": "opendata",
+            "label": "UAT departures",
+            "desc": "UAT version of departureboards.mobi",
+            "url": "//uat.departureboards.mobi/admin/api/rate",
+            "method": "GET",
+            "dataType": "json",
+            "rate": 60000,
+            "retry": 15000
         }
     ],
     "panels": [
+        {
+            "id": "tomcat1",
+            "title": "Tomcat 1",
+            "desc": "Tomcat",
+            "source": "tomcat1",
+            "css": {
+            },
+            "class": "feed1col",
+            "heading": [
+                "Statistic", "1m"
+            ],
+            "status": [
+                {
+                    "name": "jvm.heap.used.max",
+                    "label": "Heap Used Max",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.heap.used.min",
+                    "label": "Heap Used Min",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.heap.committed.max",
+                    "label": "Heap Committed Max",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.heap.committed.min",
+                    "label": "Heap Committed Min",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.nonheap.used.max",
+                    "label": "Non-Heap Used Max",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.nonheap.used.min",
+                    "label": "Non-Heap Used Min",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "tomcat2",
+            "title": "Tomcat 2",
+            "desc": "Tomcat",
+            "source": "tomcat2",
+            "css": {
+            },
+            "class": "feed1col",
+            "heading": [
+                "Statistic", "1m"
+            ],
+            "status": [
+                {
+                    "name": "jvm.heap.used.max",
+                    "label": "Heap Used Max",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.heap.used.min",
+                    "label": "Heap Used Min",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.heap.committed.max",
+                    "label": "Heap Committed Max",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.heap.committed.min",
+                    "label": "Heap Committed Min",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.nonheap.used.max",
+                    "label": "Non-Heap Used Max",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.nonheap.used.min",
+                    "label": "Non-Heap Used Min",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
         {
             "id": "feeds",
             "title": "Data Feeds",
@@ -157,7 +494,7 @@
             "status": [
                 {
                     "name": "nr.trust",
-                    "label": "TRUST",
+                    "label": "NR TRUST",
                     "desc": "Network Rail Trust Feed",
                     "stats": [
                         {
@@ -203,7 +540,7 @@
                 },
                 {
                     "name": "nr.rtppm",
-                    "label": "RTPPM",
+                    "label": "NR RTPPM",
                     "desc": "Network Rail RTPPM Feed",
                     "stats": [
                         {
@@ -248,7 +585,7 @@
                     ]
                 },
                 {
-                    "name": "nre.push",
+                    "name": "archiver.nre.push[nre.push]",
                     "label": "Darwin Push Port",
                     "desc": "Darwin PushPort Feed",
                     "stats": [
@@ -267,8 +604,8 @@
                                 }
                             },
                             "alarm": {
-                                "low": 1000,
-                                "high": 1800
+                                "low": 700,
+                                "high": 2000
                             }
                         },
                         {
@@ -287,8 +624,8 @@
                                 }
                             },
                             "alarm": {
-                                "low": 1000,
-                                "high": 30000
+                                "low": 500,
+                                "high": 28000
                             }
                         }
                     ]
@@ -308,7 +645,7 @@
             ],
             "status": [
                 {
-                    "name": "darwin.db",
+                    "name": "db.darwin[nre.push]",
                     "label": "Darwin import",
                     "desc": "Loading forecasts into the database",
                     "stats": [
@@ -354,7 +691,7 @@
                     ]
                 },
                 {
-                    "name": "rtppm",
+                    "name": "db.nr.rtppm",
                     "label": "RTPPM import",
                     "desc": "Loading rtppm into the database",
                     "stats": [
@@ -373,8 +710,8 @@
                                 }
                             },
                             "alarm": {
-                                "low": 140,
-                                "high": 162
+                                "low": 1,
+                                "high": 1
                             }
                         },
                         {
@@ -393,8 +730,327 @@
                                 }
                             },
                             "alarm": {
-                                "low": 2190,
-                                "high": 2300
+                                "low": 15,
+                                "high": 15
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "uat-tomcat",
+            "title": "UAT Tomcat",
+            "desc": "UAT Tomcat",
+            "source": "uat-tomcat",
+            "css": {
+                "clear": "both"
+            },
+            "class": "feed1col",
+            "heading": [
+                "Statistic", "1m"
+            ],
+            "status": [
+                {
+                    "name": "jvm.heap.used.max",
+                    "label": "Heap Used Max",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.heap.used.min",
+                    "label": "Heap Used Min",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.heap.committed.max",
+                    "label": "Heap Committed Max",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.heap.committed.min",
+                    "label": "Heap Committed Min",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.nonheap.used.max",
+                    "label": "Non-Heap Used Max",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "jvm.nonheap.used.min",
+                    "label": "Non-Heap Used Min",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's Memory Use",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Memory Mb",
+                                    "divisor": 1048576,
+                                    "unit": "Mb"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "uat-uktrain",
+            "title": "UAT uktra.in",
+            "desc": "UAT performance of uktra.in",
+            "source": "uat-uktrain",
+            "css": {
+            },
+            "class": "",
+            "heading": [
+                "Statistic", "1m", "15m"
+            ],
+            "status": [
+                {
+                    "name": "signal.map",
+                    "label": "Signal Map A3",
+                    "desc": "Only Signal Area A3 is used in UAT",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's stats",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 1,
+                                "high": 5000
+                            }
+                        },
+                        {
+                            "name": "day",
+                            "title": "Last days's stats",
+                            "desc": "1 tick/hour",
+                            "axis": {
+                                "x": {
+                                    "label": "15 Minutes",
+                                    "max": 96,
+                                    "tick": 4,
+                                    "tick2": 12
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 15,
+                                "high": 25000
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "cache.darwin.train",
+                    "label": "Darwin Cache",
+                    "desc": "Number of cache clears",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's stats",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 700,
+                                "high": 2000
+                            }
+                        },
+                        {
+                            "name": "day",
+                            "title": "Last days's stats",
+                            "desc": "1 tick/hour",
+                            "axis": {
+                                "x": {
+                                    "label": "15 Minutes",
+                                    "max": 96,
+                                    "tick": 4,
+                                    "tick2": 12
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 12000,
+                                "high": 30000
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "uat-departureboards",
+            "title": "UAT departureboards.mobi",
+            "desc": "UAT performance of departureboards.mobi",
+            "source": "uat-departureboards",
+            "css": {
+            },
+            "class": "",
+            "heading": [
+                "Statistic", "1m", "15m"
+            ],
+            "status": [
+                {
+                    "name": "cache.darwin.train",
+                    "label": "Darwin Cache",
+                    "desc": "Number of cache clears",
+                    "stats": [
+                        {
+                            "name": "hour",
+                            "title": "Last hour's stats",
+                            "axis": {
+                                "x": {
+                                    "label": "Minutes",
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 700,
+                                "high": 2000
+                            }
+                        },
+                        {
+                            "name": "day",
+                            "title": "Last days's stats",
+                            "desc": "1 tick/hour",
+                            "axis": {
+                                "x": {
+                                    "label": "15 Minutes",
+                                    "max": 96,
+                                    "tick": 4,
+                                    "tick2": 12
+                                },
+                                "y": {
+                                    "label": "Messages received"
+                                }
+                            },
+                            "alarm": {
+                                "low": 12000,
+                                "high": 30000
                             }
                         }
                     ]
