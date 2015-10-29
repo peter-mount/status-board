@@ -67,6 +67,7 @@ body, html {
     fill: none;
 }
 #graph text {
+    text-anchor: middle;
 }
 
 .feed {

@@ -94,13 +94,9 @@ var Feed = (function () {
      */
     Feed.showGraph = function (c, f, d) {
         c.hover(function (evt) {
-            if (f(c, d)) {
-                $("#graph").attr('visibility', 'visible')
-                        .css({
-                            top: evt.pageY + 15,
-                            left: evt.pageX
-                        });
-            }
+            $('#graph')
+                    .attr('visibility', f(c, d) ? 'visible' : 'hidden')
+                    .css({top: evt.pageY + 15, left: evt.pageX});
         });
 
         c.mouseout(function ()

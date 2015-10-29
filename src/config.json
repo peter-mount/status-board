@@ -163,11 +163,12 @@
                         {
                             "name": "hour",
                             "title": "Last hour's stats",
-                            "desc": "1 sample every minute",
                             "axis": {
                                 "x": {
                                     "label": "Minutes",
-                                    "period": 60
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
                                 },
                                 "y": {
                                     "label": "Messages received"
@@ -181,11 +182,13 @@
                         {
                             "name": "day",
                             "title": "Last days's stats",
-                            "desc": "1 sample every 15 minutes",
+                            "desc": "1 tick/hour",
                             "axis": {
                                 "x": {
                                     "label": "15 Minutes",
-                                    "period": 900
+                                    "max": 96,
+                                    "tick": 4,
+                                    "tick2": 12
                                 },
                                 "y": {
                                     "label": "Messages received"
@@ -206,11 +209,12 @@
                         {
                             "name": "hour",
                             "title": "Last hour's stats",
-                            "desc": "1 sample every minute",
                             "axis": {
                                 "x": {
                                     "label": "Minutes",
-                                    "period": 60
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
                                 },
                                 "y": {
                                     "label": "Messages received"
@@ -224,11 +228,13 @@
                         {
                             "name": "day",
                             "title": "Last days's stats",
-                            "desc": "1 sample every 15 minutes",
+                            "desc": "1 tick/hour",
                             "axis": {
                                 "x": {
                                     "label": "15 Minutes",
-                                    "period": 900
+                                    "max": 96,
+                                    "tick": 4,
+                                    "tick2": 12
                                 },
                                 "y": {
                                     "label": "Messages received"
@@ -249,11 +255,12 @@
                         {
                             "name": "hour",
                             "title": "Last hour's stats",
-                            "desc": "1 sample every minute",
                             "axis": {
                                 "x": {
                                     "label": "Minutes",
-                                    "period": 60
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
                                 },
                                 "y": {
                                     "label": "Messages received"
@@ -267,11 +274,13 @@
                         {
                             "name": "day",
                             "title": "Last days's stats",
-                            "desc": "1 sample every 15 minutes",
+                            "desc": "1 tick/hour",
                             "axis": {
                                 "x": {
                                     "label": "15 Minutes",
-                                    "period": 900
+                                    "max": 96,
+                                    "tick": 4,
+                                    "tick2": 12
                                 },
                                 "y": {
                                     "label": "Messages received"
@@ -306,11 +315,12 @@
                         {
                             "name": "hour",
                             "title": "Last hour's stats",
-                            "desc": "1 sample every minute",
                             "axis": {
                                 "x": {
                                     "label": "Minutes",
-                                    "period": 60
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
                                 },
                                 "y": {
                                     "label": "Messages received"
@@ -324,11 +334,13 @@
                         {
                             "name": "day",
                             "title": "Last days's stats",
-                            "desc": "1 sample every 15 minutes",
+                            "desc": "1 tick/hour",
                             "axis": {
                                 "x": {
                                     "label": "15 Minutes",
-                                    "period": 900
+                                    "max": 96,
+                                    "tick": 4,
+                                    "tick2": 12
                                 },
                                 "y": {
                                     "label": "Messages received"
@@ -349,11 +361,12 @@
                         {
                             "name": "hour",
                             "title": "Last hour's stats",
-                            "desc": "1 sample every minute",
                             "axis": {
                                 "x": {
                                     "label": "Minutes",
-                                    "period": 60
+                                    "max": 60,
+                                    "tick": 5,
+                                    "tick2": 15
                                 },
                                 "y": {
                                     "label": "Messages received"
@@ -367,11 +380,13 @@
                         {
                             "name": "day",
                             "title": "Last days's stats",
-                            "desc": "1 sample every 15 minutes",
+                            "desc": "1 tick/hour",
                             "axis": {
                                 "x": {
                                     "label": "15 Minutes",
-                                    "period": 900
+                                    "max": 96,
+                                    "tick": 4,
+                                    "tick2": 12
                                 },
                                 "y": {
                                     "label": "Messages received"

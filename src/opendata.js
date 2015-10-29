@@ -62,30 +62,66 @@ Feed.types.opendata = (function () {
     }
 
     var showGraph = function (c, d) {
-        var fx = 0;
-        $.each(d.v.values, function (i, e) {
-            fx = e > fx ? e : fx;
-        });
-        if (fx < 1)
-            return false;
+        var g = $('#graph').empty();
 
-        fx = 100 / fx;
-        var p = '', fy = d.v.values.length < 200 ? 1 : 200 / d.v.values.length;
+        // Calculate the Y scale so max value fits. No need to check -ve values as we dont use them
+        var ys = 0;
         $.each(d.v.values, function (i, e) {
-            if (i === 0) {
-                p = 'M0,';
-            } else {
-                p = p + 'L' + (i * fy) + ',';
-            }
-            p = p + (100 - (e * fx));
-        })
-        $('#graph').empty()
-                .append(Feed.newSVG('path', {'d': 'M0,100L200,100'}))
-                .append(Feed.newSVG('path', {'d': p}));
+            ys = e > ys ? e : ys;
+        });
+        if (ys < 1)
+            return false;
+        ys = 100 / ys;
+
+        // Calculate X scale - 1:1 for <200
+        var xs, x, xaxis = d.conf.axis ? d.conf.axis.x : null;
+        if (xaxis && xaxis.max)
+            xs = 200 / xaxis.max;
+        else
+            xs = d.v.values.length < 200 ? 1 : 200 / d.v.values.length;
+        x = 200 - (d.v.values.length * xs);
+
+        // X axis label
+        var t;
         if (d.conf.title && d.conf.desc)
-            $('#graph').append(Feed.newSVG('text', {x: 2, y: 115})
-                    .append(d.conf.desc ? d.conf.title + ' ' + d.conf.desc : d.conf.title)
-                    );
+            t = d.conf.title + ' - ' + d.conf.desc;
+        else if (d.conf.title)
+            t = d.conf.title;
+        else if (d.conf.axis && xaxis && xaxis.label)
+            t = xaxis.label;
+        if (t)
+            g.append(Feed.newSVG('text', {x: 100, y: 115}).append(t));
+
+        // X axis
+        g.append(Feed.newSVG('path', {'d': 'M0,100L200,100'}));
+
+        if (xaxis && xaxis.max) {
+            var k;
+
+            // tick - minor tick
+            if (xaxis.tick) {
+                for (var i = 0, j = 0; i < xaxis.max; i += xaxis.tick, j += xs * xaxis.tick)
+                    k = (k ? k : '') + 'M' + j + ',100l0,2';
+            }
+
+            // tic2k - major tick
+            if (xaxis.tick2) {
+                for (var i = 0, j = 0; i < xaxis.max; i += xaxis.tick2, j += xs * xaxis.tick2)
+                    k = (k ? k : '') + 'M' + j + ',100l0,5';
+            }
+
+            if (k)
+                g.append(Feed.newSVG('path', {'d': k}));
+        }
+
+        // Now the graph
+        var p;
+        $.each(d.v.values, function (i, e) {
+            p = (p ? p + 'L' : 'M') + x + ',' + (100 - (e * ys));
+            x += xs;
+        });
+        g.append(Feed.newSVG('path', {'d': p}));
+
         return true;
     };
 
