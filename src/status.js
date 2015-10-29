@@ -107,9 +107,9 @@ var Feed = (function () {
         {
             $("#graph").attr('visibility', 'hidden');
         });
-        $(d.comp).click(function (e) {
-            showGraph(d, e);
-        }).removeAttr('title');
+
+        // Remove any tool tip as it interferes with the graph. Usually the graph will include this anyhow
+        c.removeAttr('title');
     };
 
     Feed.newSVG = function (n, a) {
